@@ -1,0 +1,49 @@
+model
+{
+  for(i in 1:n)
+  {
+  D[i,] ~ dmnorm(mu[i,],P[,,i])
+  mu[i,1] ~ dnorm(0,1.0E-3)
+  mu[i,2] ~ dnorm(mu.y[i],tau.y)
+  mu.y[i]<-beta0+w.tilde.m[i]
+  } 
+  
+  ###Derivative process 
+  w.m~dmnorm(mu.w,K.inv)
+  K.inv <- inverse((1/tau.g)*K)
+  K.w.inv<-inverse(K)
+  
+  for(i in 1:m)
+  {
+  mu.w[i]<-0
+  K[i,i]<-1+0.00001
+  
+  ######Exponential covariance for the derivative process
+  for(j in (i+1):m)
+  {
+  K[i,j]<-(pow(p,pow(Dist[i,j],kappa)))
+  K[j,i]<-K[i,j]
+  }
+  }
+  
+  ###Expected value of the integrated Gaussian Process
+  for(i in 1:m) { 
+  for(j in 1:n) {
+  K.gw[j,i]<-sum(pow(p,quad1[j,i,])*quad2[j,i,])  #### Quadrature function 
+  } #End j loop 
+  } #End i loop	
+
+
+  
+  w.tilde.m<-K.gw%*%K.w.inv%*%w.m
+  
+# Priors
+beta0 ~ dnorm(0.0,1.0E-6)
+p ~ dunif(0,1)
+tau.y <- pow(sigma.y,-2)
+tau.g ~ dgamma(10,100)
+sigma.y ~ dunif(0.01,1) 
+sigma.g <- pow(tau.g,-0.5)
+
+ 
+}##End model
