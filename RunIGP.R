@@ -23,8 +23,8 @@ sapply(paste0("R/", Rfiles), source)
 ### Prepare the data for the model ###
 ## User to input the data file location and the name of their dataset e.g., dataname = "New Jersey"
 ## Plot of the raw data will be saved to fig folder
-data.raw <- dataprep(data_path = "data/NJ_CC.csv",
-                   dataname = "New Jersey",
+data.raw <- dataprep(data_path = "data/NYC.csv",
+                   dataname = "New York, USA",
                    BP_age_scale = FALSE
                   # ,GIA = TRUE, 
                   # rate.gia = 1.4
