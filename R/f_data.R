@@ -75,7 +75,7 @@ dataprep<-function(data_path = NULL,
   
   p <- ggplot(data_to_plot, aes(x = x, y = y))+
     geom_polygon(aes(group = obs_index),alpha = 0.3) + 
-    geom_point(data = data, aes(x = x, y = y), alpha = 0.6, pch = 1) +
+    geom_point(data = data, aes(x = Age, y = y), alpha = 0.6, pch = 1) +
     ylab(ifelse(GIA == FALSE, "Relative Sea Level (m)", "Sea Level (m)")) +
     xlab(ifelse(BP_age_scale == FALSE,"Year CE","Year BP")) + 
     ggtitle(ifelse(GIA == FALSE,"RSL Reconstruction","SL Reconstruction")) + 

@@ -25,7 +25,7 @@ sapply(paste0("R/", Rfiles), source)
 ## Plot of the raw data will be saved to fig folder
 data.raw <- dataprep(data_path = "data/NYC.csv",
                    dataname = "New York, USA",
-                   BP_age_scale = FALSE
+                   BP_age_scale = TRUE
                   # ,GIA = TRUE, 
                   # rate.gia = 1.4
                    )
@@ -34,7 +34,7 @@ data.raw <- dataprep(data_path = "data/NYC.csv",
 
 ### Run the model ###
 ## User to provide the interval for how often they want predictions from the model
-interval = 50
+interval = 30
 
 ## run
 RunIGPModel(data.raw=data.raw,
@@ -42,6 +42,7 @@ RunIGPModel(data.raw=data.raw,
             fast = TRUE)
 
 ## Check convergence for GP parameters
+## Note: this won't work if fast = TRUE
 get_diagnostics(data.raw=data.raw)
 
 ### Output the model figures and results ###
