@@ -21,7 +21,7 @@ sapply(paste0("R/", Rfiles), source)
 ## If Age is given in the BP scale, change the BP_age_scale argument to TRUE in the dataprep() function below
 
 ### Prepare the data for the model ###
-## User to input the data file location and the name of their dataset e.g., dataname = "New Jersey"
+## User to input the data file location and the name of their dataset e.g., dataname = "New York"
 ## Plot of the raw data will be saved to fig folder
 data.raw <- dataprep(data_path = "data/NYC.csv",
                    dataname = "New York, USA",
