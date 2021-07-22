@@ -1,11 +1,13 @@
 IGPests<-function(data.raw=NULL,
-                  interval = 25)
+                  interval = 25,
+                  incl.errbounds = TRUE)
 {
   dataname<-data.raw$dataname
   
   # Get model data
   modeldat <- IGPdata(data.raw = data.raw,
-                      interval = interval)
+                      interval = interval,
+                      incl.errbounds = incl.errbounds)
   # Get model output
   load(paste0("modeloutput/",dataname,"/mcmc.array.rda"))
   n_iter <- length(mcmc.array[,1,paste0("beta0")])
@@ -14,6 +16,7 @@ IGPests<-function(data.raw=NULL,
   N.grid <- modeldat$Ngrid
   x.grid <- modeldat$xstar
   xstar <- modeldat$xstar
+
   Dist <- modeldat$Dist
   
   #Set up the matrix that will contain the estimates
@@ -70,7 +73,13 @@ IGPests<-function(data.raw=NULL,
   u95.rate <- quantile(mean.dydt,probs=0.975)
   l95.rate <- quantile(mean.dydt,probs=0.025)
   
-  EstsandRates<-list(pred=pred,dydt=dydt,mean.rate=mean.rate,sd.rate=sd.rate,l95.rate=l95.rate,u95.rate=u95.rate)
+  EstsandRates<-list(pred=pred,
+                     dydt=dydt,
+                     mean.rate=mean.rate,
+                     sd.rate=sd.rate,
+                     l95.rate=l95.rate,
+                     u95.rate=u95.rate,
+                     incl.errbounds = incl.errbounds)
   save(EstsandRates, file=paste0("modeloutput/",dataname,"/EstsandRates.rda"))
   cat("EIV-IGP posterior samples for estimates and rates saved to modeloutput folder", "\n")
 }
