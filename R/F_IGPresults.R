@@ -8,11 +8,13 @@ GetIGPRes<-function(data.raw=NULL,
   GIA <- data.raw$GIA
   BP <- data.raw$BP_age_scale
   
-  modeldat <- IGPdata(data.raw = data.raw,
-                      interval = interval)
-  
   load(paste0("modeloutput/",data.raw$dataname,"/EstsandRates.rda"))
   
+  modeldat <- IGPdata(data.raw = data.raw,
+                      interval = interval,
+                      incl.errbounds = EstsandRates$incl.errbounds)
+  
+
   
   pred_s <- suppressWarnings(as_tibble(EstsandRates$pred) %>% 
               rename_at(vars(everything()),~ as.character(modeldat$year.grid)) %>% 
@@ -36,14 +38,21 @@ GetIGPRes<-function(data.raw=NULL,
                        rate_lwr = mean(value) - 2*(sd(value)),
                        rate_upr = mean(value) + 2*(sd(value))) %>% 
              mutate(year = ifelse(rep(data.raw$BP_age_scale,length(rate_est)) == FALSE, year, 1950 - year))
- 
+  
+  rate_mean <- mean(dydt_s$value)
+  rate_mean_lwr <- quantile(dydt_s$value,probs = 0.025)
+  rate_mean_upr <- quantile(dydt_s$value,probs = 0.975)
+  
   write.csv(SLestimates,file=paste0("results/",data.raw$dataname,"/",ifelse(data.raw$GIA == FALSE,"RSL_Estimates.csv", "SL_Estimates.csv")))
   write.csv(SLrates,file=paste0("results/",data.raw$dataname,"/",ifelse(data.raw$GIA == FALSE, "RSL_Rates.csv","SL_Rates.csv")))
   cat(paste0("Spreadsheets containing ", ifelse(data.raw$GIA == FALSE, "RSL estimates ","GIA Corrected SL estimates "),"and rates for"," ",data.raw$dataname," ", "are saved in results folder","\n"))
 
   return(list(SLestimates = SLestimates,
               SLrates = SLrates, 
-              modeldat = modeldat))
+              modeldat = modeldat,
+              rate_mean = rate_mean,
+              rate_mean_lwr = rate_mean_lwr,
+              rate_mean_upr = rate_mean_upr))
 }
 
 IGPResults<-function(data.raw=NULL,
@@ -83,5 +92,9 @@ IGPResults<-function(data.raw=NULL,
   
   suppressMessages(ggsave(paste0("fig/",data.raw$dataname,"/","Results_Rate Estimates", ifelse(data.raw$GIA == FALSE,"","(GIA corrected)"),".pdf", sep = ""),p2, width = 7, height = 4))
   
-  cat("Plots of estimates and rates saved in fig folder")
+  cat("Plots of estimates and rates saved in fig folder \n")
+  
+  return(list(mean_rate = model_res$rate_mean, 
+              mean_rate_lwr = model_res$rate_mean_lwr,
+              mean_rate_upr = model_res$rate_mean_upr))
 }
