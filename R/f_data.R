@@ -80,6 +80,8 @@ dataprep<-function(data_path = NULL,
     xlab(ifelse(BP_age_scale == FALSE,"Year CE","Year BP")) + 
     ggtitle(ifelse(GIA == FALSE,"RSL Reconstruction","SL Reconstruction")) + 
     theme_classic()
+  
+  if(BP_age_scale == TRUE) {p <- p + scale_x_reverse()}
 
     suppressMessages(ggsave(paste0("fig/",dataname,"/","Raw Data",ifelse(GIA[1] == FALSE,"","(GIA corrected)"),".pdf", sep = ""),p, width = 7, height = 4))
     cat("Plots of data saved to fig folder", "\n")
@@ -108,7 +110,7 @@ IGPdata<-function(data.raw = NULL,
   data <- data.raw$data
   
   ############# Set up the grid for the GP ###################
-  nw=40      # Sets the min number of grid points for the derivative
+  nw=30      # Sets the min number of grid points for the derivative
   if(incl.errbounds){
   up <- max(data$x_upr)/1000
   low <- min(data$x_lwr)/1000
@@ -117,12 +119,13 @@ IGPdata<-function(data.raw = NULL,
   else{
     up = ifelse(is.null(upper),max(data$x_thousand),upper)
     low = ifelse(is.null(lower),min(data$x_thousand),lower)
-    xgrid=c(low,seq(min(data$x_thousand),max(data$x_thousand),by=(interval/1000)),up)
+    xgrid=c(seq(min(data$x_thousand),max(data$x_thousand),by=(interval/1000)))
+    Ngrid = length(xgrid)
   }
   Ngrid = length(xgrid)
 
   if(Ngrid<nw)
-    stop("Grid length must be at least 40")
+    stop("Grid length must be at least 30")
   
   else
     cat(paste0("Using a grid size of"," ",Ngrid," ", "and an interval width of"," ",interval," ","years \n"))
@@ -131,6 +134,7 @@ IGPdata<-function(data.raw = NULL,
    minx = min(data$x_thousand)
    x = data$x_thousand-minx
    xstar = xgrid - minx
+
    Dist <- rdist(xstar) ###Distance matrix required for the model 
    D <- cbind(x,data$y) ###Combine the x,y data for the model 
    
