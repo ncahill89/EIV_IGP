@@ -1,11 +1,12 @@
 RunIGPModel<-function(data.raw=NULL,
                       cor.p=0.2,
-                      n.iter=30000,
-                      n.burnin=10000,
+                      n.iter=25000,
+                      n.burnin=5000,
                       n.thin=10,
                       ChainNums=seq(1,2),
                       fast=FALSE,
                       run.on.server=FALSE,
+                      incl.errbounds = TRUE,
                       interval = 25){
   # Create a directory "modeloutput" in current working directory
   dataname<-data.raw$dataname
@@ -15,32 +16,33 @@ RunIGPModel<-function(data.raw=NULL,
   
   # Get model data
   modeldat <- IGPdata(data.raw = data.raw,
-                      interval = interval)
+                      interval = interval,
+                      incl.errbounds = incl.errbounds)
   
   ###The necessary data
   jags.data <- list(n = modeldat$N,
-                 m = modeldat$Ngrid,
-                 P = modeldat$P,
-                 D = modeldat$D,
-                # L = modeldat$L,
-                # ppi = modeldat$ppi,
-                # cosfunc = modeldat$cosfunc,
-                 Dist = modeldat$Dist,
-                 xstar = modeldat$xstar,
-                 quad1 = modeldat$quad1,
-                 quad2 = modeldat$quad2,
-                 kappa = 1.99,
-                 cor.p = cor.p)    
-
+                    m = modeldat$Ngrid,
+                    P = modeldat$P,
+                    D = modeldat$D,
+                    L = modeldat$L,
+                    ppi = modeldat$ppi,
+                    cosfunc = modeldat$cosfunc,
+                    Dist = modeldat$Dist,
+                    xstar = modeldat$xstar,
+                    quad1 = modeldat$quad1,
+                    quad2 = modeldat$quad2,
+                    kappa = 1.99,
+                    cor.p = cor.p)    
+  
   ###Paramaters to save 
   jags.pars <- c("beta0",
                  "sigma.g",
                  "p",
                  "w.m",
-                 "mu.y",
+                 "mu",
                  "sigma.y",
                  "K.w.inv")
-
+  
   ########Run the model########
   if(fast)
   {
@@ -87,7 +89,8 @@ RunIGPModel<-function(data.raw=NULL,
   
   # Get estimates
   IGPests(data.raw=data.raw,
-          interval = interval)
+          interval = interval,
+          incl.errbounds = incl.errbounds)
   
 } 
 
@@ -115,14 +118,14 @@ InternalRunOneChain <- function(#Do MCMC sampling
   temp <- rnorm(1)
   
   mod<-suppressWarnings(jags(data=jags.data,
-            parameters.to.save=jags.pars,
-            model.file=model.file,
-            n.chains=1,
-            n.iter=n.iter,
-            n.burnin=n.burnin,
-            n.thin=n.thin,
-            DIC=FALSE,
-            jags.seed = set.seed.chain))
+                             parameters.to.save=jags.pars,
+                             model.file=model.file,
+                             n.chains=1,
+                             n.iter=n.iter,
+                             n.burnin=n.burnin,
+                             n.thin=n.thin,
+                             DIC=FALSE,
+                             jags.seed = set.seed.chain))
   
   mod.upd <- mod
   save(mod.upd, file=file.path(output.dir, "temp.JAGSobjects", paste0("jags_mod", chainNum, ".Rdata")))
