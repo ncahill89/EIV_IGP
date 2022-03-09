@@ -10,3 +10,7 @@ The input data to the model can be from tidegauge measurements and/or proxy reco
 __Running the code__
 
 Dowload the repo and click the `EIVIGP.Rproj` to open the project in Rstudio. Then you need to open the `runIGP.R` script to run the model. Example datasets are provided. 
+
+__JAGS__
+
+Running these models requires JAGS (Just Another Gibbs Sampler) which you can install from (here)[https://sourceforge.net/projects/mcmc-jags/].
