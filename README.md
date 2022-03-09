@@ -13,4 +13,4 @@ Dowload the repo and click the `EIVIGP.Rproj` to open the project in Rstudio. Th
 
 __JAGS (Just Another Gibbs Sampler)__
 
-Running these models requires JAGS (Just Another Gibbs Sampler) which you can install from (here)[https://sourceforge.net/projects/mcmc-jags/].
+Running these models requires JAGS (Just Another Gibbs Sampler) which you can install from [here](https://sourceforge.net/projects/mcmc-jags/).
