@@ -1,6 +1,6 @@
 # EIV_IGP
 
-⚠️ Known Bug Notice: A bug affecting temporal erros was identified in earlier versions of this repository.
+⚠️ Known Bug Notice: A bug affecting temporal errors was identified in earlier versions of this repository.
 
 ✅ Fix: The issue has been resolved in the most recent version. Please download or clone the latest version from the repository.
 
