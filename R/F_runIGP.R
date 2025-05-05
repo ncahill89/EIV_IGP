@@ -1,6 +1,6 @@
 RunIGPModel<-function(data.raw=NULL,
                       cor.p=0.2,
-                      n.iter=25000,
+                      n.iter=15000,
                       n.burnin=5000,
                       n.thin=10,
                       ChainNums=seq(1,2),

@@ -25,7 +25,7 @@ sapply(paste0("R/", Rfiles), source)
 ## Plot of the raw data will be saved to fig folder
 data.raw <- dataprep(data_path = "data/NYC.csv",
                    dataname = "New York",
-                   BP_age_scale = FALSE)
+                   BP_age_scale = TRUE)
 
 ## NOTE!!! If correcting for GIA change GIA = TRUE and provide a rate of GIA in mm/yr
 

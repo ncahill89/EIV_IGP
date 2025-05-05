@@ -1,5 +1,12 @@
 # EIV_IGP
 
+⚠️ Known Bug Notice: A bug affecting temporal erros was identified in earlier versions of this repository.
+
+✅ Fix: The issue has been resolved in the most recent version. Please download or clone the latest version from the repository.
+
+ℹ️ Impact: Previous results should not be significantly affected, but I recommend updating to ensure correct behavior moving forward.
+
+
 __About the Model__
 
 The Errors in Variables Integrated Gaussian Process (EIV IGP) Model is used to perform Bayesian inference on historical rates of sea-level change. 
