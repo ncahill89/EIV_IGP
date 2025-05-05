@@ -1,6 +1,5 @@
 # EIV_IGP
 
-
 __About the Model__
 
 The Errors in Variables Integrated Gaussian Process (EIV IGP) Model is used to perform Bayesian inference on historical rates of sea-level change. 

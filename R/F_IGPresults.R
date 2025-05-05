@@ -79,8 +79,10 @@ IGPResults<-function(data.raw=NULL,
     xlab(ifelse(data.raw$BP_age_scale == FALSE,"Year CE","Year BP")) + 
     ggtitle(ifelse(data.raw$GIA == FALSE,"RSL Estimates","SL Estimates")) + 
     theme_classic()
+  if(data.raw$BP_age_scale == TRUE) {p1 <- p1 + scale_x_reverse()}
   
   suppressMessages(ggsave(paste0("fig/",data.raw$dataname,"/","Results_SL Estimates", ifelse(data.raw$GIA == FALSE,"","(GIA corrected)"),".pdf", sep = ""),p1, width = 7, height = 4))
+  
   
   p2 <- ggplot(rate_dat, aes(x = year, y = rate_est))+
     geom_line() +
@@ -90,8 +92,11 @@ IGPResults<-function(data.raw=NULL,
     ggtitle(ifelse(data.raw$GIA == FALSE,"RSL Rates","SL Rates")) + 
     theme_classic()
   
+  if(data.raw$BP_age_scale == TRUE) {p2 <- p2 + scale_x_reverse()}
+  
   suppressMessages(ggsave(paste0("fig/",data.raw$dataname,"/","Results_Rate Estimates", ifelse(data.raw$GIA == FALSE,"","(GIA corrected)"),".pdf", sep = ""),p2, width = 7, height = 4))
   
+
   cat("Plots of estimates and rates saved in fig folder \n")
   
   return(list(mean_rate = model_res$rate_mean, 

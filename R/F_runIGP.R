@@ -7,7 +7,8 @@ RunIGPModel<-function(data.raw=NULL,
                       fast=FALSE,
                       run.on.server=FALSE,
                       incl.errbounds = TRUE,
-                      interval = 25){
+                      interval = 25,
+                      EIV = TRUE){
   # Create a directory "modeloutput" in current working directory
   dataname<-data.raw$dataname
   dir.create("modeloutput", showWarnings = FALSE)
@@ -29,8 +30,6 @@ RunIGPModel<-function(data.raw=NULL,
                     cosfunc = modeldat$cosfunc,
                     Dist = modeldat$Dist,
                     xstar = modeldat$xstar,
-                    quad1 = modeldat$quad1,
-                    quad2 = modeldat$quad2,
                     kappa = 1.99,
                     cor.p = cor.p)    
   
@@ -44,14 +43,24 @@ RunIGPModel<-function(data.raw=NULL,
                  "K.w.inv")
   
   ########Run the model########
-  if(fast)
+
+  if(EIV == FALSE)
   {
-    model.file="model/EIVIGPfast.txt"
+    if(fast)
+    {
+      model.file="model/IGPfast.txt"
+    }
+    
+      model.file="model/IGP.txt"
+      
+      jags.data$quad1 <- modeldat$quad1
+      jags.data$quad2 <- modeldat$quad2
+      
   }
   
-  if(!fast)
+  if(EIV == TRUE)
   {
-    model.file="model/EIVIGP.txt"
+    model.file="model/EIVIGP_estquad.txt"
   }
   
   

@@ -15,7 +15,7 @@ Rfiles <- list.files(file.path(getwd(), "R"))
 Rfiles <- Rfiles[grepl(".R", Rfiles)]
 sapply(paste0("R/", Rfiles), source)
 
-### An example of the correct format for the data is shown for New Jersey
+### An example of the correct format for the data is shown for New York
 ## Do not change the headings (RSL,RSLError,Age,AgeError)
 ## Errors must be 1-sigma
 ## If Age is given in the BP scale, change the BP_age_scale argument to TRUE in the dataprep() function below
@@ -24,19 +24,18 @@ sapply(paste0("R/", Rfiles), source)
 ## User to input the data file location and the name of their dataset e.g., dataname = "New York"
 ## Plot of the raw data will be saved to fig folder
 data.raw <- dataprep(data_path = "data/NYC.csv",
-                   dataname = "New York, USA",
+                   dataname = "New York",
                    BP_age_scale = FALSE)
 
 ## NOTE!!! If correcting for GIA change GIA = TRUE and provide a rate of GIA in mm/yr
 
 ### Run the model ###
 ## User to provide the interval for how often they want predictions from the model
-interval = 30
+interval = 50
 
 ## run
 RunIGPModel(data.raw=data.raw,
-            interval = interval,
-            fast = FALSE)
+            interval = interval)
 
 ## Check convergence for GP parameters
 ## Note: this won't work if fast = TRUE
