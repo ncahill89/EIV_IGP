@@ -2,3 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+modeloutput
+fig
+results
+test_parallel.R

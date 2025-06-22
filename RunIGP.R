@@ -3,11 +3,13 @@ rm (list = ls( ))
 
 ### Required Packages and Libraries ###
 ## uncomment the install.packages if these packages aren't already installed ###
-#install.packages(c("rjags","R2jags","fields","tidyverse))
+#install.packages(c("rjags","R2jags","fields","tidyverse","doParallel","foreach"))
 library(rjags)
 library(R2jags)
 library(fields)
 library(tidyverse)
+library(doParallel)
+library(foreach)
 ##############################################################
 
 ### Load the required R functions ###
