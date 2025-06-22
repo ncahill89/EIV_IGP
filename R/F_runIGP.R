@@ -8,12 +8,62 @@ RunIGPModel<-function(data.raw=NULL,
                       run.on.server=FALSE,
                       incl.errbounds = TRUE,
                       interval = 25,
-                      EIV = TRUE){
+                      EIV = TRUE,
+                      use.parallel = TRUE,
+                      n.cores = NULL){
   # Create a directory "modeloutput" in current working directory
   dataname<-data.raw$dataname
   dir.create("modeloutput", showWarnings = FALSE)
   dir.create(paste0("modeloutput/",dataname),showWarnings = F)
   output.dir<-file.path(paste0("modeloutput/",dataname))
+  
+  # Setup parallel processing
+  if(use.parallel && !run.on.server) {
+    # Load required packages for parallel processing
+    if(!require(doParallel, quietly = TRUE)) {
+      cat("doParallel package not found. Installing...\n")
+      install.packages("doParallel")
+      library(doParallel)
+    }
+    if(!require(foreach, quietly = TRUE)) {
+      cat("foreach package not found. Installing...\n")
+      install.packages("foreach")
+      library(foreach)
+    }
+    
+    # Determine number of cores to use
+    if(is.null(n.cores)) {
+      n.cores <- min(length(ChainNums), parallel::detectCores() - 1)
+      n.cores <- max(1, n.cores)  # Ensure at least 1 core
+    }
+    
+    cat(paste("Setting up parallel processing with", n.cores, "cores for", length(ChainNums), "chains\n"))
+    
+    # Setup parallel backend
+    cl <- makeCluster(n.cores)
+    registerDoParallel(cl)
+    
+    # Export necessary variables and functions to cluster
+    clusterEvalQ(cl, {
+      library(R2jags)
+      library(rjags)
+    })
+    
+    # Export the InternalRunOneChain function to workers
+    # First, ensure the function is available in the global environment
+    if(!exists("InternalRunOneChain", envir = .GlobalEnv)) {
+      assign("InternalRunOneChain", InternalRunOneChain, envir = .GlobalEnv)
+    }
+    clusterExport(cl, "InternalRunOneChain", envir = .GlobalEnv)
+    
+    # Setup cleanup function
+    on.exit({
+      if(exists("cl") && !is.null(cl)) {
+        stopCluster(cl)
+        cat("Parallel cluster stopped\n")
+      }
+    })
+  }
   
   # Get model data
   modeldat <- IGPdata(data.raw = data.raw,
@@ -64,8 +114,10 @@ RunIGPModel<-function(data.raw=NULL,
   }
   
   
-  if (run.on.server) {
-    foreach(chainNum=ChainNums) %dopar% {
+  if (run.on.server || (use.parallel && !run.on.server)) {
+    # Use parallel processing
+    foreach(chainNum=ChainNums, .packages=c('R2jags', 'rjags'), 
+            .export=c('InternalRunOneChain')) %dopar% {
       cat(paste("Start chain ID ", chainNum), "\n")
       
       InternalRunOneChain(chainNum = chainNum,
@@ -78,6 +130,7 @@ RunIGPModel<-function(data.raw=NULL,
                           output.dir = output.dir)
     } # end chainNums
   } else {
+    # Use sequential processing
     for (chainNum in ChainNums){
       cat(paste("Start chain ID ", chainNum), "\n")
       
