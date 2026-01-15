@@ -1,13 +1,17 @@
 IGPests<-function(data.raw=NULL,
                   interval = 25,
-                  incl.errbounds = TRUE)
+                  incl.errbounds = TRUE,
+                  upper = NULL, 
+                  lower = NULL)
 {
   dataname<-data.raw$dataname
   
   # Get model data
   modeldat <- IGPdata(data.raw = data.raw,
                       interval = interval,
-                      incl.errbounds = incl.errbounds)
+                      incl.errbounds = incl.errbounds,
+                      upper = upper, 
+                      lower = lower)
   # Get model output
   load(paste0("modeloutput/",dataname,"/mcmc.array.rda"))
   n_iter <- length(mcmc.array[,1,paste0("beta0")])

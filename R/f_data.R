@@ -109,6 +109,11 @@ IGPdata<-function(data.raw = NULL,
   
   data <- data.raw$data
   
+  if(data.raw$BP_age_scale)
+  {
+    upper <- 1950 - upper
+    lower <- 1950 - lower
+  }
   ############# Set up the grid for the GP ###################
   nw=30      # Sets the min number of grid points for the derivative
   if(incl.errbounds){
@@ -117,9 +122,9 @@ IGPdata<-function(data.raw = NULL,
   xgrid=c(low,seq(min(data$x_thousand),max(data$x_thousand),by=(interval/1000)),up)
   }
   else{
-    up = ifelse(is.null(upper),max(data$x_thousand),upper)
-    low = ifelse(is.null(lower),min(data$x_thousand),lower)
-    xgrid=c(seq(min(data$x_thousand),max(data$x_thousand),by=(interval/1000)))
+    up = ifelse(is.null(upper),max(data$x_thousand),upper/1000)
+    low = ifelse(is.null(lower),min(data$x_thousand),lower/1000)
+    xgrid=seq(low,up,by=(interval/1000))
     Ngrid = length(xgrid)
   }
   Ngrid = length(xgrid)

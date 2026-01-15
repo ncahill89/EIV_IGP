@@ -23,8 +23,8 @@ sapply(paste0("R/", Rfiles), source)
 ### Prepare the data for the model ###
 ## User to input the data file location and the name of their dataset e.g., dataname = "New York"
 ## Plot of the raw data will be saved to fig folder
-data.raw <- dataprep(data_path = "data/NYC.csv",
-                   dataname = "New York",
+data.raw <- dataprep(data_path = "data/Fig6_ctwj_data_Singapore-G1.csv",
+                   dataname = "Fig6_noEIV",
                    BP_age_scale = TRUE)
 
 ## NOTE!!! If correcting for GIA change GIA = TRUE and provide a rate of GIA in mm/yr
@@ -35,7 +35,8 @@ interval = 50
 
 ## run
 RunIGPModel(data.raw=data.raw,
-            interval = interval)
+            interval = interval, 
+            EIV = FALSE)
 
 ## Check convergence for GP parameters
 ## Note: this won't work if fast = TRUE

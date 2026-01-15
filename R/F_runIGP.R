@@ -8,7 +8,10 @@ RunIGPModel<-function(data.raw=NULL,
                       run.on.server=FALSE,
                       incl.errbounds = TRUE,
                       interval = 25,
-                      EIV = TRUE){
+                      EIV = TRUE,
+                      upper = NULL,
+                      lower = NULL){
+
   # Create a directory "modeloutput" in current working directory
   dataname<-data.raw$dataname
   dir.create("modeloutput", showWarnings = FALSE)
@@ -18,7 +21,9 @@ RunIGPModel<-function(data.raw=NULL,
   # Get model data
   modeldat <- IGPdata(data.raw = data.raw,
                       interval = interval,
-                      incl.errbounds = incl.errbounds)
+                      incl.errbounds = incl.errbounds,
+                      upper = upper,
+                      lower = lower)
   
   ###The necessary data
   jags.data <- list(n = modeldat$N,
@@ -99,7 +104,9 @@ RunIGPModel<-function(data.raw=NULL,
   # Get estimates
   IGPests(data.raw=data.raw,
           interval = interval,
-          incl.errbounds = incl.errbounds)
+          incl.errbounds = incl.errbounds,
+          upper = upper,
+          lower = lower)
   
 } 
 

@@ -1,5 +1,7 @@
 GetIGPRes<-function(data.raw=NULL,
-                    interval = 25)
+                    interval = 25,
+                    upper = NULL,
+                    lower = NULL)
 {
 
   dir.create("results", showWarnings = FALSE)
@@ -12,7 +14,9 @@ GetIGPRes<-function(data.raw=NULL,
   
   modeldat <- IGPdata(data.raw = data.raw,
                       interval = interval,
-                      incl.errbounds = EstsandRates$incl.errbounds)
+                      incl.errbounds = EstsandRates$incl.errbounds,
+                      upper = upper,
+                      lower = lower)
   
 
   
@@ -56,15 +60,18 @@ GetIGPRes<-function(data.raw=NULL,
 }
 
 IGPResults<-function(data.raw=NULL,
-                   interval = 25,
-                   xlimits=NULL,
-                   ylimits=NULL,
-                   ratelimits=NULL)
+                     interval = 25,
+                     upper = NULL,
+                     lower = NULL,
+                     ratelimits=NULL)
 {
+  
 
 
   model_res <- GetIGPRes(data.raw=data.raw,
-                         interval = interval)
+                         interval = interval,
+                         upper = upper,
+                         lower = lower)
   modeldat <- model_res$modeldat
   
   sl_dat <- model_res$SLestimates

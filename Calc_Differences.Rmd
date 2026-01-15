@@ -1,0 +1,63 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+## Overview
+
+This document compares Relative Sea Level (RSL) estimates and rates from 2 models
+(Test 1 and Test 2). It produces:
+
+- RSL estimates
+- RSL differences
+- RSL rates
+- Rate differences
+
+---
+
+## Libraries
+
+```{r}
+library(tidyverse)
+library(ggpubr)
+
+source("R/F_differences.R")
+```
+
+## User Settings
+
+**This is the only section you normally edit**
+
+```{r}
+# Model 1
+
+ref_label1 <- "Test 1" # change if you wish"
+ref_dir1   <- "Test 1"
+
+
+# Model 2
+
+ref_label2 <- "Test 2" # change if you wish"
+ref_dir2   <- "Test 2"
+
+# Directories
+
+results_dir <- "results"
+model_dir   <- "modeloutput"
+
+# Save figures to disk?
+
+save_plots <- TRUE
+
+```
+
+
+## Run
+
+**Plots and output files will be in your working directory.**
+
+```{r, message=FALSE}
+results <- run_rsl_test()
+```
+
